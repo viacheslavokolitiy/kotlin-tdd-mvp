@@ -1,0 +1,32 @@
+language: android
+jdk: oraclejdk8
+sudo: false
+
+android:
+  components:
+  - tools
+  - platform-tools
+  - build-tools-27.0.3
+  - android-28
+  - extra-google-m2repository
+
+  licenses:
+  - 'android-sdk-preview-license-52d11cd2'
+  - 'android-sdk-license-.+'
+  - 'google-gdk-license-.+'
+
+before_install:
+- yes | sdkmanager "platforms;android-28"
+
+script:
+- ./gradlew testDebugUnitTest
+
+before_cache:
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+  - $HOME/.android/build-cache
