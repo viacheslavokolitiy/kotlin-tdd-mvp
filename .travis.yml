@@ -33,4 +33,4 @@ cache:
   - $HOME/.android/build-cache
 
 after_success:
-- bash <(curl -s https://codecov.io/bash) -t c5a836b1-2f80-4f41-9cb3-463919762142
+- bash <(curl -s https://codecov.io/bash) -J 'kotlintdd'
