@@ -2,11 +2,6 @@ language: android
 jdk: oraclejdk8
 sudo: false
 
-env:
-  global:
-    - ANDROID_TARGET=android-21
-    - ANDROID_ABI=armeabi-v7a
-
 android:
   components:
   - tools
@@ -25,12 +20,7 @@ before_install:
 - yes | sdkmanager "platforms;android-28"
 
 script:
-- ./gradlew build jacocoTestReport assembleAndroidTest
-- echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
-- emulator -avd test -no-skin -no-audio -no-window &
-- android-wait-for-emulator
-- adb shell setprop dalvik.vm.dexopt-flags v=n,o=v
-- ./gradlew connectedCheck
+- ./gradlew build createDebugUnitTestCoverageReport assembleAndroidTest
 
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
