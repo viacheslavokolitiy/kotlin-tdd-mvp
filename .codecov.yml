@@ -1,0 +1,6 @@
+coverage:
+  precision: 2         # how many decimal places to display in the UI: 0 <= value <= 4
+    round: down          # how coverage is rounded: down/up/nearest
+    range: 50...100      # custom range of coverage colors from red -> yellow -> green
+codecov:
+  token: c5a836b1-2f80-4f41-9cb3-463919762142

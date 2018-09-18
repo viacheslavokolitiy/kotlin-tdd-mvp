@@ -9,6 +9,7 @@ android:
   - build-tools-27.0.3
   - android-28
   - extra-google-m2repository
+  - sys-img-${ANDROID_ABI}-${ANDROID_TARGET}
 
   licenses:
   - 'android-sdk-preview-license-52d11cd2'
@@ -19,7 +20,7 @@ before_install:
 - yes | sdkmanager "platforms;android-28"
 
 script:
-- ./gradlew testDebugUnitTest
+- ./gradlew build createDebugUnitTestCoverageReport assembleDebugAndroidTest
 
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -32,4 +33,4 @@ cache:
   - $HOME/.android/build-cache
 
 after_success:
-- bash <(curl -s https://codecov.io/bash) -t c5a836b1-2f80-4f41-9cb3-463919762142
+- bash <(curl -s https://codecov.io/bash) -J 'kotlintdd'
