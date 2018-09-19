@@ -6,7 +6,7 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
-apply from: '../jacoco.gradle'
+apply plugin: 'jacoco'
 
 android {
     compileSdkVersion 28
@@ -27,16 +27,11 @@ android {
     }
 
     testOptions {
-        unitTests.returnDefaultValues = true
+        execution 'ANDROID_TEST_ORCHESTRATOR'
+        animationsDisabled true
+
         unitTests {
             includeAndroidResources = true
-        }
-        unitTests.all {
-            maxParallelForks 1
-            maxHeapSize "2048m"
-            jacoco {
-                includeNoLocationClasses = true
-            }
         }
     }
 
@@ -48,11 +43,36 @@ android {
         debug {
             testCoverageEnabled true
         }
-
-        release {
-            testCoverageEnabled false
-        }
     }
+}
+
+jacoco {
+    toolVersion = '0.8.1'
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
+//add 'createDebugCoverageReport' for connected tests
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = [ '**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*',
+                       'android/**/*.*',
+                       'io/github/tdd/android/di/**']
+    def debugTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+    def mainSrc = "$project.projectDir/src/main/java"
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+    executionData = fileTree(dir: project.buildDir, includes: [
+            'jacoco/testDebugUnitTest.exec', 'outputs/code-coverage/connected/*coverage.ec'
+    ])
 }
 
 dependencies {
@@ -93,7 +113,8 @@ dependencies {
     testImplementation 'org.powermock:powermock-module-junit4:1.7.0'
     testImplementation 'org.powermock:powermock-core:1.7.0'
     testImplementation 'org.powermock:powermock-module-junit4-rule:1.7.0'
-    testImplementation 'org.robolectric:robolectric:3.4.2'
+    testImplementation 'org.robolectric:robolectric:3.7.1'
     testImplementation 'org.robolectric:shadows-multidex:3.4-rc2'
     testImplementation "org.robolectric:shadows-support-v4:3.4-rc2"
+    androidTestUtil 'com.android.support.test:orchestrator:1.0.2'
 }

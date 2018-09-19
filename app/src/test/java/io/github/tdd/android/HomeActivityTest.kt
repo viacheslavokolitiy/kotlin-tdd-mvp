@@ -10,7 +10,8 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 
 @RunWith(RobolectricTestRunner::class)
-@Config(constants = BuildConfig::class, sdk = [Build.VERSION_CODES.LOLLIPOP])
+@Config(constants = BuildConfig::class, sdk = [Build.VERSION_CODES.LOLLIPOP],
+        packageName = "io.github.tdd.android")
 class HomeActivityTest {
 
     private lateinit var activity: HomeActivity
