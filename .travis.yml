@@ -20,7 +20,7 @@ before_install:
 - yes | sdkmanager "platforms;android-28"
 
 script:
-- ./gradlew clean jacocoTestReport
+- ./gradlew jacocoTestReport
 
 before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
