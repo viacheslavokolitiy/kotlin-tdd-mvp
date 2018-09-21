@@ -1,6 +1,9 @@
 package io.github.tdd.android
 
 import android.os.Build
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -24,5 +27,27 @@ class HomeActivityTest {
     @Test
     fun testGetLayoutResId() {
         assertEquals(R.layout.activity_home, activity.getLayoutResId())
+    }
+
+    @Test
+    fun testPlaceholderVisibility() {
+        val findViewById = activity.findViewById<TextView>(R.id.placeholder)
+        assertEquals(View.GONE, findViewById.visibility)
+    }
+
+    @Test
+    fun testShowProgress() {
+        activity.showProgress()
+        val progressBar = activity.findViewById<ProgressBar>(R.id.pbProgress)
+        val placeholder = activity.findViewById<TextView>(R.id.placeholder)
+        assertEquals(View.VISIBLE, progressBar.visibility)
+        assertEquals(View.GONE, placeholder.visibility)
+    }
+
+    @Test
+    fun testHideProgress() {
+        activity.hideProgress()
+        val progressBar = activity.findViewById<ProgressBar>(R.id.pbProgress)
+        assertEquals(View.GONE, progressBar.visibility)
     }
 }

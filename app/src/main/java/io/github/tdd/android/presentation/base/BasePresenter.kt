@@ -1,14 +1,8 @@
 package io.github.tdd.android.presentation.base
 
-abstract class BasePresenter<V> {
+interface BasePresenter<V> {
 
-    private var view: V? = null
+    fun onCreate(view: V)
 
-    protected fun onCreate(v: V) {
-        view = v
-    }
-
-    protected fun onDestroy() {
-        view = null
-    }
+    fun onDestroy()
 }
