@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 open class InstalledApplicationsProvider @Inject constructor(val context: Application) {
 
-    fun getInstalledApplications(): List<PackageInfo> {
+    open fun getInstalledApplications(): List<PackageInfo> {
         val packageManager = context.packageManager
         val installedPackages = packageManager.getInstalledPackages(PackageManager.GET_PERMISSIONS)
 
