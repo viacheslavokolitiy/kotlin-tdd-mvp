@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">kotlin-tdd-mvp</string>
+    <string name="no_user_apps_message">You haven\'t installed any apps yet</string>
+    <string name="dangerous_apps">Dangerous apps</string>
+    <string name="moderate_risk_apps">Moderate risk apps</string>
+    <string name="safe_risk_apps">Safe risk apps</string>
 </resources>
