@@ -2,7 +2,7 @@ package io.github.tdd.android.presentation.model
 
 import android.content.pm.PermissionInfo
 import android.graphics.drawable.Drawable
-import org.junit.Assert.assertEquals
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -38,8 +38,26 @@ class ScannedAppItemTest {
     @Test
     fun testModelReceivesPermissionsList() {
         val pi = PermissionInfo()
-        val list = listOf<PermissionInfo>(pi).toMutableList()
+        val list = listOf(pi).toMutableList()
         val copy = item!!.copy(permissions = list)
         assertEquals(list, copy.permissions)
+    }
+
+    @Test
+    fun testToString() {
+        assertTrue(!item.toString().isEmpty())
+    }
+
+    @Test
+    fun testEquals() {
+        val copy = item!!.copy(title = "")
+        assertFalse(item!!.equals(copy))
+    }
+
+    @Test
+    fun testComponentsNotNull() {
+        assertTrue(item?.component1() is Drawable)
+        assertTrue(item?.component2() is String)
+        assertTrue(item?.component3() is MutableList<PermissionInfo>)
     }
 }
