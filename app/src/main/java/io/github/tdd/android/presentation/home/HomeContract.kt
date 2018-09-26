@@ -20,7 +20,7 @@ interface HomeContract {
         /**
          * Shows applications scan result
          */
-        fun showScanResult(applicationsScanResult: ApplicationsScanResult)
+        fun showScanResult(applicationsScanResult: ApplicationsScanResult?)
     }
 
     interface Presenter : BasePresenter<View>{

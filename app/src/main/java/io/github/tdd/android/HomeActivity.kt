@@ -64,13 +64,13 @@ class HomeActivity : BaseActivity(), HomeContract.View {
         pbProgress.visibility = View.GONE
     }
 
-    override fun showScanResult(applicationsScanResult: ApplicationsScanResult) {
+    override fun showScanResult(applicationsScanResult: ApplicationsScanResult?) {
         val items = arrayListOf<ListItem>()
 
-        val dangerousPackages = applicationsScanResult.dangerousPackages
-        val moderatePackages = applicationsScanResult.moderatePackages
-        val lowRiskPackages = applicationsScanResult.safePackages
-        if (!dangerousPackages.isEmpty()) {
+        val dangerousPackages = applicationsScanResult?.dangerousPackages
+        val moderatePackages = applicationsScanResult?.moderatePackages
+        val lowRiskPackages = applicationsScanResult?.safePackages
+        if (!dangerousPackages!!.isEmpty()) {
             val dangerousAppsHeaderItem = DangerousAppsHeaderItem(R.string.dangerous_apps)
             items.add(dangerousAppsHeaderItem)
             processPackages(dangerousPackages, items)
@@ -79,13 +79,13 @@ class HomeActivity : BaseActivity(), HomeContract.View {
         if (!applicationsScanResult.moderatePackages.isEmpty()) {
             val moderateAppsHeaderItem = ModerateAppsRiskHeaderItem(R.string.moderate_risk_apps)
             items.add(moderateAppsHeaderItem)
-            processPackages(moderatePackages, items)
+            processPackages(moderatePackages!!, items)
         }
 
         if (!applicationsScanResult.safePackages.isEmpty()) {
             val headerItem = SafeAppsHeaderItem(R.string.safe_risk_apps)
             items.add(headerItem)
-            processPackages(lowRiskPackages, items)
+            processPackages(lowRiskPackages!!, items)
         }
 
         scannedAppDelegate.setOnItemClickListener(presenter)
