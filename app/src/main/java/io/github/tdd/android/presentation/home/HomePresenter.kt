@@ -1,8 +1,8 @@
 package io.github.tdd.android.presentation.home
 
 import android.content.pm.PackageInfo
-import android.content.pm.PermissionInfo
 import io.github.tdd.android.adapter.delegate.base.BaseListItemAdapterDelegate
+import io.github.tdd.android.model.RequestedPermissionType
 import io.github.tdd.android.presentation.base.BasePresenterImpl
 import io.github.tdd.android.presentation.model.ApplicationsScanResult
 import io.github.tdd.android.presentation.model.ScannedAppItem
@@ -23,43 +23,44 @@ class HomePresenter @Inject constructor(val provider: InstalledApplicationsProvi
     }
 
     override fun scanApplications() {
-        val applications = provider.getInstalledApplications()
+        val appsWithRequestedPermissions = provider.getInstalledApplications()
+                .filter { it -> it.requestedPermissions != null }
+        scanAppsWithRequestedPermissions(appsWithRequestedPermissions)
+    }
+
+    private fun scanAppsWithRequestedPermissions(packages: List<PackageInfo>) {
         val dangerousPackages = arrayListOf<PackageInfo>()
-        val moderatePackages = arrayListOf<PackageInfo>()
+        val moderateRiskPackages = arrayListOf<PackageInfo>()
         val safePackages = arrayListOf<PackageInfo>()
-        val appsWithPermissions = applications.filter { it -> it.permissions != null }
-                .toList()
-        val permissionLessPackages = applications.filter { it -> (it.permissions == null
-                || it.permissions.isEmpty()) }
-        safePackages.addAll(permissionLessPackages)
-        for (appsWithPermission in appsWithPermissions) {
-            for (permission in appsWithPermission.permissions) {
-                if (permission.protectionLevel == PermissionInfo.PROTECTION_DANGEROUS) {
-                    dangerousPermissionsCount.incrementAndGet()
-                } else if (permission.protectionLevel == PermissionInfo.PROTECTION_NORMAL
-                        || permission.protectionLevel == PermissionInfo.PROTECTION_SIGNATURE){
-                    safePermissionsCount.incrementAndGet()
-                } else {
-                    moderatePermissionsCount.incrementAndGet()
+        packages.filter { it -> !it.requestedPermissions.isEmpty() }
+                .forEach {
+                    val requestedPermissions = it.requestedPermissions.asIterable()
+                    requestedPermissions.forEach {
+                        if (RequestedPermissionType.DANGEROUS.permissions.contains(it)) {
+                            dangerousPermissionsCount.incrementAndGet()
+                        } else if (RequestedPermissionType.NORMAL.permissions.contains(it)) {
+                            moderatePermissionsCount.incrementAndGet()
+                        } else {
+                            safePermissionsCount.incrementAndGet()
+                        }
+                    }
+
+                    val highRiskPermissions = dangerousPermissionsCount.get()
+                    val moderateRiskPermissions = moderatePermissionsCount.get()
+
+                    if ((highRiskPermissions + moderateRiskPermissions).toDouble() / it.requestedPermissions.size > DANGEROUS_APP_THRESHOLD) {
+                        dangerousPackages.add(it)
+                    } else if ((highRiskPermissions + moderateRiskPermissions).toDouble() / it.requestedPermissions.size > MODERATE_APP_THRESHOLD &&
+                            (highRiskPermissions + moderateRiskPermissions).toDouble() / it.requestedPermissions.size < DANGEROUS_APP_THRESHOLD ) {
+                        moderateRiskPackages.add(it)
+                    } else {
+                        safePackages.add(it)
+                    }
+
+                    resetCounters()
                 }
-            }
-
-            val dangerousPermissions = dangerousPermissionsCount.get()
-            val moderatePermissions = moderatePermissionsCount.get()
-            if ((dangerousPermissions + moderatePermissions).toDouble() / appsWithPermission.permissions.size > DANGEROUS_APP_THRESHOLD) {
-                dangerousPackages.add(appsWithPermission)
-            } else if ((dangerousPermissions + moderatePermissions).toDouble() / appsWithPermission.permissions.size > MODERATE_APP_THRESHOLD &&
-                    (dangerousPermissions + moderatePermissions).toDouble() / appsWithPermission.permissions.size < DANGEROUS_APP_THRESHOLD ) {
-                moderatePackages.add(appsWithPermission)
-            } else {
-                safePackages.add(appsWithPermission)
-            }
-
-            resetCounters()
-        }
-
         view!!.hideProgress()
-        view!!.showScanResult(ApplicationsScanResult(dangerousPackages, moderatePackages, safePackages))
+        view!!.showScanResult(ApplicationsScanResult(dangerousPackages, moderateRiskPackages, safePackages))
     }
 
     override fun onItemClick(item: ScannedAppItem, position: Int) {
