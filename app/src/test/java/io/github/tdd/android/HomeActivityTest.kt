@@ -1,5 +1,6 @@
 package io.github.tdd.android
 
+import android.content.pm.PackageInfo
 import android.os.Build
 import android.view.View
 import android.widget.ProgressBar
@@ -9,7 +10,9 @@ import io.github.tdd.android.adapter.delegate.ModerateRiskAppsHeaderDelegate
 import io.github.tdd.android.adapter.delegate.SafeAppsHeaderDelegate
 import io.github.tdd.android.adapter.delegate.ScannedAppDelegate
 import io.github.tdd.android.presentation.home.HomePresenter
+import io.github.tdd.android.presentation.model.ApplicationsScanResult
 import io.github.tdd.android.util.provider.InstalledApplicationsProvider
+import kotlinx.android.synthetic.main.activity_home.*
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -98,5 +101,34 @@ class HomeActivityTest {
     fun testActivityShowsCorrectTitle() {
         activity.showScreenTitle(R.string.installed_applications)
         assertEquals("Installed applications", activity.supportActionBar?.title)
+    }
+
+    @Test
+    fun testActivityShowsDefaultTitle() {
+        activity.showScreenTitle(R.string.installed_applications)
+        val message = if (activity.supportActionBar == null) "kotlin-tdd-mvp" else "Installed applications"
+        assertEquals(message, activity.supportActionBar?.title)
+    }
+
+    @Test
+    fun testShowModerateRiskPackages() {
+        val packageInfo = PackageInfo()
+        packageInfo.packageName = "io.github.tdd.android"
+        val appScanResult = ApplicationsScanResult(listOf(), listOf(packageInfo), listOf())
+        val rcAppList = activity.rcAppList
+        activity.showScanResult(appScanResult)
+        val adapter = rcAppList.adapter
+        assertTrue(adapter!!.itemCount > 0)
+    }
+
+    @Test
+    fun testShowLowRiskPackages() {
+        val packageInfo = PackageInfo()
+        packageInfo.packageName = "io.github.tdd.android"
+        val appScanResult = ApplicationsScanResult(listOf(), listOf(), listOf(packageInfo))
+        val rcAppList = activity.rcAppList
+        activity.showScanResult(appScanResult)
+        val adapter = rcAppList.adapter
+        assertTrue(adapter!!.itemCount > 0)
     }
 }
