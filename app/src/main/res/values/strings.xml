@@ -4,4 +4,5 @@
     <string name="dangerous_apps">Dangerous apps</string>
     <string name="moderate_risk_apps">Moderate risk apps</string>
     <string name="safe_risk_apps">Safe risk apps</string>
+    <string name="installed_applications">Installed applications</string>
 </resources>

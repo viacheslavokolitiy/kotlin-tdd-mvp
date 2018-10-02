@@ -1,6 +1,7 @@
 package io.github.tdd.android.presentation.home
 
 import android.content.pm.PackageInfo
+import io.github.tdd.android.R
 import io.github.tdd.android.adapter.delegate.base.BaseListItemAdapterDelegate
 import io.github.tdd.android.model.RequestedPermissionType
 import io.github.tdd.android.presentation.base.BasePresenterImpl
@@ -20,6 +21,7 @@ class HomePresenter @Inject constructor(val provider: InstalledApplicationsProvi
     override fun onCreate(view: HomeContract.View) {
         super.onCreate(view)
         view.showProgress()
+        view.showScreenTitle(R.string.installed_applications)
     }
 
     override fun scanApplications() {

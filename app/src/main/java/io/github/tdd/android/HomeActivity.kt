@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.annotation.StringRes
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.android.AndroidInjection
 import io.github.tdd.android.adapter.ApplicationsAdapter
@@ -94,8 +94,11 @@ class HomeActivity : BaseActivity(), HomeContract.View {
                 scannedAppDelegate, safeAppsHeaderDelegate, scannedAppDelegate))
         rcAppList.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rcAppList.adapter = adapter
-        rcAppList.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
         adapter?.notifyDataSetChanged()
+    }
+
+    override fun showScreenTitle(@StringRes screenTitle: Int) {
+        supportActionBar?.setTitle(screenTitle)
     }
 
     private fun processPackages(packages: List<PackageInfo>, items: ArrayList<ListItem>) {
