@@ -10,7 +10,8 @@ import io.github.tdd.android.adapter.delegate.SafeAppsHeaderDelegate
 import io.github.tdd.android.adapter.delegate.ScannedAppDelegate
 import io.github.tdd.android.presentation.home.HomePresenter
 import io.github.tdd.android.util.provider.InstalledApplicationsProvider
-import org.junit.Assert.*
+import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -91,5 +92,11 @@ class HomeActivityTest {
         val scannedAppDelegate = ScannedAppDelegate(RuntimeEnvironment.systemContext)
         activity.scannedAppDelegate = scannedAppDelegate
         assertTrue(activity.scannedAppDelegate.equals(scannedAppDelegate))
+    }
+
+    @Test
+    fun testActivityShowsCorrectTitle() {
+        activity.showScreenTitle(R.string.installed_applications)
+        assertEquals("Installed applications", activity.supportActionBar?.title)
     }
 }

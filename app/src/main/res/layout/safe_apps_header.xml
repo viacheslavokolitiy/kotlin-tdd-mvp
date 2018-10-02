@@ -10,5 +10,6 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/medium_text"
         android:layout_margin="3dp"
+        android:textStyle="bold"
         tools:text="Moderate risk apps"/>
 </LinearLayout>

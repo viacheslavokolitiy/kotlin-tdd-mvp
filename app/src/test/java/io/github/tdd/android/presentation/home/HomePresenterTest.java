@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import io.github.tdd.android.R;
 import io.github.tdd.android.presentation.model.ApplicationsScanResult;
 import io.github.tdd.android.util.provider.InstalledApplicationsProvider;
 
@@ -39,6 +40,11 @@ public class HomePresenterTest {
         when(mProvider.getInstalledApplications()).thenReturn(Collections.<PackageInfo>emptyList());
         mPresenter = new HomePresenter(mProvider);
         mPresenter.onCreate(mView);
+    }
+
+    @Test
+    public void testShowScreenTitle() {
+        verify(mView).showScreenTitle(R.string.installed_applications);
     }
 
     @Test

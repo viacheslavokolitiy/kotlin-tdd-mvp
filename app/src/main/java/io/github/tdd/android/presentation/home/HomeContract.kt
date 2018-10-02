@@ -1,5 +1,6 @@
 package io.github.tdd.android.presentation.home
 
+import androidx.annotation.StringRes
 import io.github.tdd.android.presentation.base.BasePresenter
 import io.github.tdd.android.presentation.model.ApplicationsScanResult
 import io.github.tdd.android.presentation.model.ScannedAppItem
@@ -21,6 +22,11 @@ interface HomeContract {
          * Shows applications scan result
          */
         fun showScanResult(applicationsScanResult: ApplicationsScanResult)
+
+        /**
+         * Shows screen title
+         */
+        fun showScreenTitle(@StringRes screenTitle: Int)
     }
 
     interface Presenter : BasePresenter<View>{
